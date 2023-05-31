@@ -15,6 +15,7 @@ export default function Select({
   setSelected,
 }: {
   options: {
+    id: number;
     name: string;
   }[];
   title: string;

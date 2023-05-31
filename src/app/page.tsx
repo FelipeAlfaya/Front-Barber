@@ -3,8 +3,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { fetchLogin } from './_actions';
+import { User } from '@/interfaces/user';
 
 export default function Home() {
   const [isPending, startTransition] = useTransition();
@@ -28,6 +29,8 @@ export default function Home() {
 
     if (token) {
       router.push('/dashboard');
+    } else {
+      router.push('/');
     }
   }, [router]);
 
@@ -124,10 +127,6 @@ export default function Home() {
                 Login
               </button>
               <div className="flex justify-between mt-4">
-                <span className="text-sm ml-2 hover:text-blue-500 cursor-pointer hover:-translate-y-1 duration-500 transition-all">
-                  Esqueceu sua senha?
-                </span>
-
                 <Link
                   href="#"
                   className="text-sm ml-2 hover:text-blue-500 cursor-pointer hover:-translate-y-1 duration-500 transition-all"

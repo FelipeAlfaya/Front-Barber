@@ -12,6 +12,7 @@ export default function Page() {
     id: number;
     name: string;
   }>();
+  const [date, setDate] = useState<string>('');
   const [tasks, setTasks] = useState<number[]>([]);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -25,7 +26,6 @@ export default function Page() {
         setIsMounted(true);
       });
   }, []);
-
   const onSelectTask = (id: number) => {
     if (tasks.includes(id)) {
       setTasks(tasks.filter(task => task !== id));
@@ -48,6 +48,51 @@ export default function Page() {
     return null;
   }
 
+  const handleSubmit = () => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      alert('Você precisa estar logado para agendar um horário');
+      return;
+    }
+
+    if (!horario) {
+      alert('Você precisa selecionar um horário');
+      return;
+    }
+
+    if (!tasks.length) {
+      alert('Você precisa selecionar um serviço');
+      return;
+    }
+
+    fetch('http://localhost:3030/appointments', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+
+      body: JSON.stringify({
+        barber: barber?.id,
+        date: date?.toString(),
+        time: horario.name,
+        tasks,
+      }),
+    });
+
+    console.log({
+      barber: barber?.id,
+      date: date.toString(),
+      time: horario.name,
+      tasks,
+    });
+  };
+
+  const handleDateChange = (e: any) => {
+    setDate(e.target.value);
+  };
+
   return (
     <>
       {(barber && (
@@ -62,30 +107,39 @@ export default function Page() {
               title="Horário"
               options={[
                 {
+                  id: 1,
                   name: '10:00',
                 },
                 {
+                  id: 1,
                   name: '11:00',
                 },
                 {
+                  id: 1,
                   name: '12:00',
                 },
                 {
+                  id: 1,
                   name: '13:00',
                 },
                 {
+                  id: 1,
                   name: '14:00',
                 },
                 {
+                  id: 1,
                   name: '15:00',
                 },
                 {
+                  id: 1,
                   name: '16:00',
                 },
                 {
+                  id: 1,
                   name: '17:00',
                 },
                 {
+                  id: 1,
                   name: '18:00',
                 },
               ]}
@@ -93,30 +147,45 @@ export default function Page() {
           </div>
           <div className="mb-8">
             <h1 className="font-bold">Data</h1>
-            <input type="text" placeholder="Nome" className="input" />
+            <input
+              onChange={handleDateChange}
+              value={date}
+              type="date"
+              placeholder="Nome"
+              className="input"
+            />
           </div>
           <>
             <h1 className="font-bold mb-4">Serviços</h1>
             {(barber.tasks.length &&
               barber.tasks.map(task => {
                 return (
-                  <div key={task.id} className="mb-8 flex justify-between">
-                    <div className="flex">
-                      <input
-                        onChange={() => onSelectTask(task.id)}
-                        type="checkbox"
-                        className="checkbox"
-                      />
-                      <span className="ml-2">{task.description}</span>
+                  <>
+                    <div key={task.id} className="mb-8 flex justify-between">
+                      <div className="flex">
+                        <input
+                          onChange={() => onSelectTask(task.id)}
+                          type="checkbox"
+                          className="checkbox"
+                        />
+                        <span className="ml-2">{task.description}</span>
+                      </div>
+                      <span className="font-bold">R$ {task.price}</span>
                     </div>
-                    <span className="font-bold">R$ {task.price}</span>
-                  </div>
+                  </>
                 );
               })) || (
               <div className="text-center">
                 <p className="text-gray-500">Nenhum serviço encontrado</p>
               </div>
             )}
+            <button
+              onClick={handleSubmit}
+              type="button"
+              className="mt-8 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
+            >
+              Confirmar
+            </button>
           </>
         </div>
       )) || (

@@ -31,7 +31,7 @@ export default function Example() {
           Para agendar seu horário basta clicar no botão abaixo e preencher o
           formulário.
         </p>
-        <Link href="/agendar">
+        <Link href="/dashboard/agendar">
           <button>Agendar Horário</button>
         </Link>
       </div>
