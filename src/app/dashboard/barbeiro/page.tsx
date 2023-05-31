@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import fetchMyAppointments from './_actions';
 import { Appointment } from '@/interfaces/barber';
 import Image from 'next/image';
+import { TrashIcon } from '@heroicons/react/24/outline';
 
 function BarberTime() {
   const router = useRouter();
@@ -15,7 +16,7 @@ function BarberTime() {
   const getMyAppointments = useCallback(async (token: string) => {
     await fetchMyAppointments(token).then(res => {
       if (res.data instanceof Array) {
-        setAppointments(res.data);
+        setAppointments(res.data.sort((a, b) => a.time.localeCompare(b.time)));
       }
     });
   }, []);
@@ -99,6 +100,16 @@ function BarberTime() {
                 </div>
               )}
             </div>
+            <TrashIcon
+              className="w-6 h-6 text-red-400 cursor-pointer"
+              onClick={() => {
+                setAppointments((oldAppointments: Appointment[]) =>
+                  oldAppointments.filter(
+                    appointment => appointment.id !== appointments.id,
+                  ),
+                );
+              }}
+            />
           </li>
         ))}
       </ul>

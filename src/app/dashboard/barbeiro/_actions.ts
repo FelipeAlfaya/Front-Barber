@@ -1,6 +1,10 @@
 'use server';
 
-export default async function fetchMyAppointments(token: string) {
+import { Appointment } from '@/interfaces/barber';
+
+export default async function fetchMyAppointments(token: string): Promise<{
+  data: Appointment[];
+}> {
   const res = await fetch('http://localhost:3030/appointment/me', {
     method: 'GET',
     headers: {
