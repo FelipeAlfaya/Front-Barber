@@ -4,25 +4,35 @@ import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Fragment } from 'react';
-
-const navigation = [
-  { name: 'Início', href: '/dashboard' },
-  { name: 'Agendar horário', href: '/dashboard/agendar' },
-];
-
-const userNavigation = [{ name: 'Sair', href: '/' }];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function Navbar() {
+export default function Navbar({ type }: { type: 'Client' | 'Barber' }) {
   const pathname = usePathname();
+  const router = useRouter();
+
   function handleLogout() {
     localStorage.removeItem('token');
+    router.push('/');
+    return;
   }
+
+  const navigation = {
+    Client: [
+      { name: 'Início', href: '/dashboard' },
+      { name: 'Agendar horário', href: '/dashboard/agendar' },
+    ],
+    Barber: [
+      {
+        name: 'Agendamentos',
+        href: '/dashboard/barbeiro',
+      },
+    ],
+  };
 
   return (
     <>
@@ -38,7 +48,7 @@ export default function Navbar() {
                     </div>
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4 text-white">
-                        {navigation.map(item => (
+                        {navigation[type].map(item => (
                           <Link
                             key={item.name}
                             href={item.href}
@@ -80,17 +90,14 @@ export default function Navbar() {
                           leaveTo="transform opacity-0 scale-95"
                         >
                           <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            {userNavigation.map(item => (
-                              <Menu.Item key={item.name}>
-                                <button
-                                  onClick={handleLogout}
-                                  className="block px-4 py-2 text-sm text-[#1a1a1a] hover:text-red-600 duration-300"
-                                >
-                                  {/* sair botão */}
-                                  {item.name}
-                                </button>
-                              </Menu.Item>
-                            ))}
+                            <Menu.Item>
+                              <button
+                                onClick={handleLogout}
+                                className="block px-4 py-2 text-sm text-[#1a1a1a] hover:text-red-600 duration-300"
+                              >
+                                Sair
+                              </button>
+                            </Menu.Item>
                           </Menu.Items>
                         </Transition>
                       </Menu>
@@ -118,7 +125,7 @@ export default function Navbar() {
 
               <Disclosure.Panel className="md:hidden">
                 <div className="space-y-1 px-2 pb-3 pt-2 sm:px-3">
-                  {navigation.map(item => (
+                  {navigation[type].map(item => (
                     <Disclosure.Button key={item.name} as="a" href={item.href}>
                       {item.name}
                     </Disclosure.Button>
@@ -144,16 +151,13 @@ export default function Navbar() {
                     </button>
                   </div>
                   <div className="mt-3 space-y-1 px-2">
-                    {userNavigation.map(item => (
-                      <Disclosure.Button
-                        key={item.name}
-                        as="a"
-                        href={item.href}
-                        className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
-                      >
-                        {item.name}
-                      </Disclosure.Button>
-                    ))}
+                    <Disclosure.Button
+                      as="span"
+                      onClick={handleLogout}
+                      className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                    >
+                      Sair
+                    </Disclosure.Button>
                   </div>
                 </div>
               </Disclosure.Panel>

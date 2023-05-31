@@ -1,6 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 
-export default function Example() {
+export default function Page() {
   return (
     <>
       <div className="homePageContainer">

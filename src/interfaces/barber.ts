@@ -1,3 +1,5 @@
+import { User } from './user';
+
 export type Barber = {
   id: number;
   name: string;
@@ -11,4 +13,12 @@ export type Task = {
   id: number;
   description: string;
   price: number;
+};
+
+export type Appointment = {
+  id: number;
+  date: string;
+  created_at: string;
+  time: string;
+  client: User;
 };
