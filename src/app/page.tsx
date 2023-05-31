@@ -2,28 +2,34 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useTransition } from 'react';
+import { fetchLogin } from './_actions';
 
 export default function Home() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    const res = await fetch('http://localhost:3000/auth', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
+  const handleSubmit = (credentials: FormData) => {
+    startTransition(async () => {
+      const res = await fetchLogin(credentials);
+
+      if (res.data.token) {
+        localStorage.setItem('token', res.data.token);
+        router.push('/dashboard');
+      } else {
+        alert('Email ou senha incorretos');
+      }
     });
-    const data = await res.json();
-    if (data.error) {
-      alert(data.error);
-    } else {
-      alert(data.message);
-    }
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      router.push('/dashboard');
+    }
+  }, [router]);
 
   return (
     <>
@@ -56,7 +62,10 @@ export default function Home() {
         </div>
         <div className="flex w-full lg:w-1/2 justify-center items-center bg-white space-y-8">
           <div className="w-full px-8 md:px-32 lg:px-24">
-            <form className="bg-white rounded-md shadow-2xl p-5">
+            <form
+              action={handleSubmit}
+              className="bg-white rounded-md shadow-2xl p-5"
+            >
               <h1 className="text-gray-800 font-bold text-2xl mb-1">
                 Olá de novo!
               </h1>
@@ -108,7 +117,7 @@ export default function Home() {
                 />
               </div>
               <button
-                onClick={handleSubmit}
+                disabled={isPending}
                 type="submit"
                 className="block w-full bg-indigo-600 mt-5 py-2 rounded-2xl hover:bg-indigo-700 hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-2"
               >

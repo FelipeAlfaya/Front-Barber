@@ -1,8 +1,35 @@
+'use client';
+
 import Image from 'next/image';
-import Navbar from '../../components/Navbar';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect, useTransition } from 'react';
+import { fetchRegister } from './_actions';
 
 function Page() {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+
+  const handleSubmit = (credentials: FormData) => {
+    startTransition(async () => {
+      const res = await fetchRegister(credentials);
+
+      if (res.data.token) {
+        router.push('/');
+      } else {
+        alert(res.data.error);
+      }
+    });
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      router.push('/dashboard');
+    }
+  }, [router]);
+
   return (
     <>
       <div className="h-screen flex">
@@ -17,7 +44,7 @@ function Page() {
               inset-0 
               z-0"
           ></div>
-          <div className="inset-0 flex items-center justify-center w-full mx-auto px-20 flex-col items-center space-y-6 ">
+          <div className="inset-0 flex justify-center w-full mx-auto px-20 flex-col items-center space-y-6 ">
             <h1 className="text-white font-bold text-4xl font-sans">
               <Image
                 src="/logo.jpeg"
@@ -34,7 +61,10 @@ function Page() {
         </div>
         <div className="flex w-full lg:w-1/2 justify-center items-center bg-white space-y-8">
           <div className="w-full px-8 md:px-32 lg:px-24">
-            <form className="bg-white rounded-md shadow-2xl p-5">
+            <form
+              action={handleSubmit}
+              className="bg-white rounded-md shadow-2xl p-5"
+            >
               <h1 className="text-gray-800 font-bold text-2xl mb-1">
                 Olá de novo!
               </h1>
@@ -124,13 +154,14 @@ function Page() {
                 <input
                   className="pl-2 w-full outline-none border-none"
                   type="password"
-                  name="password"
-                  id="password"
+                  name="password-confirmation"
+                  id="password-confirmation"
                   placeholder="Confirm your password"
                 />
               </div>
 
               <button
+                disabled={isPending}
                 type="submit"
                 className="block w-full bg-indigo-600 mt-5 py-2 rounded-2xl hover:bg-indigo-700 hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-2"
               >
@@ -145,7 +176,7 @@ function Page() {
                   href="#"
                   className="text-sm ml-2 hover:text-blue-500 cursor-pointer hover:-translate-y-1 duration-500 transition-all"
                 >
-                  <Link href="/register">Ainda não tem uma conta?</Link>
+                  Já possui uma conta? <Link href="/">Faça login!</Link>
                 </a>
               </div>
             </form>

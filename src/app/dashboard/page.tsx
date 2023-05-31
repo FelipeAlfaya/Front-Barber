@@ -1,11 +1,8 @@
-'use client';
-
-import Navbar from '../../components/Navbar';
+import Link from 'next/link';
 
 export default function Example() {
   return (
     <>
-      <Navbar />
       <div className="homePageContainer">
         <h2>Horário de funcionamento</h2>
         <table>
@@ -30,9 +27,9 @@ export default function Example() {
           Para agendar seu horário basta clicar no botão abaixo e preencher o
           formulário.
         </p>
-        <a href="/schedule">
+        <Link href="/agendar">
           <button>Agendar Horário</button>
-        </a>
+        </Link>
       </div>
     </>
   );
