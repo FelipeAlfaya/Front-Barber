@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -12,16 +13,94 @@
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0; 
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+html {
+  box-sizing: border-box;
 }
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  background-color: #172740;
+  font-family: Poppins, sans-serif;
+  user-select: none;
+}
+
+.login_img_section {
+  background: linear-gradient(rgba(2,2,2,.7),rgba(0,0,0,.7)),url(/barber.png) no-repeat center center;
+  width: fit-content;
+}
+
+.homePageContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  color: #ffffff;
+}
+
+.homePageContainer > h2 {
+  font-size: 24px;
+  margin: 80px 0 30px 0;
+}
+
+th, td {
+  border: 1px solid #ffffff;
+  border-collapse: collapse;
+  padding: 15px;
+  text-align: center;
+} th:nth-child(1) {
+  border-radius: 15px 0 0 0;
+} th:nth-child(3) {
+  border-radius: 0 15px 0 0;
+} td:nth-child(1) {
+  border-radius: 0 0 0 15px;
+} td:nth-child(3) {
+  border-radius: 0 0 15px 0;
+} tr > th {
+  font-weight: 600;
+}
+
+div.homePageContainer > p {
+  width: 600px;
+}
+
+div.homePageContainer > a > button {
+  width: 215px;
+  height: 44px;
+  background-color: #084298;
+  border-radius: 16px;
+  border: none;
+  color: #EFF0F6;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 50px 0 0 0;
+} div.homePageContainer > button:hover {
+  cursor: pointer;
+  background-color: rgba(8, 66, 152, 0.8);
+  transition: background-color 500ms;
+} div.homePageContainer > button:focus {
+  outline: none;
+}
+
+@media (max-width: 615px) {
+  div.homePageContainer > p {
+    width: auto;
+    margin: 0 20px;
+  }
+
+}
+@media (max-width: 515px) {
+  div.homePageContainer > table {
+    margin: 0 20px;
+  }
+}
+  
