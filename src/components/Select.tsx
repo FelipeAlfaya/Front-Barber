@@ -15,12 +15,10 @@ export default function Select({
   setSelected,
 }: {
   options: {
-    id: number;
     name: string;
   }[];
   title: string;
   selected?: {
-    id: number;
     name: string;
   };
   setSelected: (value: { id: number; name: string }) => void;
@@ -61,9 +59,9 @@ export default function Select({
               leaveTo="opacity-0"
             >
               <Listbox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                {options.map(option => (
+                {options.map((option, index) => (
                   <Listbox.Option
-                    key={option.id}
+                    key={index}
                     className={({ active }) =>
                       classNames(
                         active ? 'bg-indigo-600 text-white' : 'text-gray-900',

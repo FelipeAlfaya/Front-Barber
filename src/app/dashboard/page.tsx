@@ -6,16 +6,20 @@ export default function Example() {
       <div className="homePageContainer">
         <h2>Horário de funcionamento</h2>
         <table>
-          <tr>
-            <th>Segunda à Quinta</th>
-            <th>Sexta e Sábado</th>
-            <th>Domingos</th>
-          </tr>
-          <tr>
-            <td>9h até 18h</td>
-            <td>6h até 18h</td>
-            <td>8h30 até 12h</td>
-          </tr>
+          <thead>
+            <tr>
+              <th>Segunda à Quinta</th>
+              <th>Sexta e Sábado</th>
+              <th>Domingos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>9h até 18h</td>
+              <td>6h até 18h</td>
+              <td>8h30 até 12h</td>
+            </tr>
+          </tbody>
         </table>
         <h2>Serviços</h2>
         <p>

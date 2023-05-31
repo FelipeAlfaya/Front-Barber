@@ -128,12 +128,12 @@ export default function Home() {
                   Esqueceu sua senha?
                 </span>
 
-                <a
+                <Link
                   href="#"
                   className="text-sm ml-2 hover:text-blue-500 cursor-pointer hover:-translate-y-1 duration-500 transition-all"
                 >
                   <Link href="/register">Ainda não tem uma conta?</Link>
-                </a>
+                </Link>
               </div>
             </form>
           </div>

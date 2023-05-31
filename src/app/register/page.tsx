@@ -172,12 +172,12 @@ function Page() {
                   Esqueceu sua senha?
                 </span>
 
-                <a
+                <Link
                   href="#"
                   className="text-sm ml-2 hover:text-blue-500 cursor-pointer hover:-translate-y-1 duration-500 transition-all"
                 >
                   Já possui uma conta? <Link href="/">Faça login!</Link>
-                </a>
+                </Link>
               </div>
             </form>
           </div>
