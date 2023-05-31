@@ -3,7 +3,10 @@
 import Select from '@/components/Select';
 import { Barber } from '@/interfaces/barber';
 import Image from 'next/image';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useTransition } from 'react';
+import fetchAppointment from './_actions';
+import Datepicker from 'react-tailwindcss-datepicker';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
   const [barbers, setBarbers] = useState<Barber[]>([]);
@@ -15,6 +18,8 @@ export default function Page() {
   const [date, setDate] = useState<string>('');
   const [tasks, setTasks] = useState<number[]>([]);
   const [isMounted, setIsMounted] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const getBarbers = useCallback(async () => {
     await fetch('/api/barbers')
@@ -26,6 +31,7 @@ export default function Page() {
         setIsMounted(true);
       });
   }, []);
+
   const onSelectTask = (id: number) => {
     if (tasks.includes(id)) {
       setTasks(tasks.filter(task => task !== id));
@@ -51,11 +57,6 @@ export default function Page() {
   const handleSubmit = () => {
     const token = localStorage.getItem('token');
 
-    if (!token) {
-      alert('Você precisa estar logado para agendar um horário');
-      return;
-    }
-
     if (!horario) {
       alert('Você precisa selecionar um horário');
       return;
@@ -66,26 +67,21 @@ export default function Page() {
       return;
     }
 
-    fetch('http://localhost:3030/appointments', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-
-      body: JSON.stringify({
-        barber: barber?.id,
-        date: date?.toString(),
+    startTransition(async () => {
+      await fetchAppointment({
+        barber: barber!.id,
         time: horario.name,
         tasks,
-      }),
-    });
-
-    console.log({
-      barber: barber?.id,
-      date: date.toString(),
-      time: horario.name,
-      tasks,
+        token,
+        date,
+      }).then(res => {
+        if (res.data.id) {
+          alert('Agendamento realizado com sucesso!');
+          router.push('/dashboard');
+        } else {
+          alert(res.data.error);
+        }
+      });
     });
   };
 
@@ -166,9 +162,12 @@ export default function Page() {
                         <input
                           onChange={() => onSelectTask(task.id)}
                           type="checkbox"
+                          name={`task-${task.id}`}
                           className="checkbox"
                         />
-                        <span className="ml-2">{task.description}</span>
+                        <label htmlFor={`task-${task.id}`} className="ml-4">
+                          {task.description}
+                        </label>
                       </div>
                       <span className="font-bold">R$ {task.price}</span>
                     </div>

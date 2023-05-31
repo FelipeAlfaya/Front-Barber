@@ -20,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-br" style={poppins.style}>
+    <html lang="pt-BR" style={poppins.style}>
       <body>{children}</body>
     </html>
   );

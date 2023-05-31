@@ -4,9 +4,11 @@ export type Barber = {
   email: string;
   avatar: string;
   stars: number;
-  tasks: {
-    id: number;
-    description: string;
-    price: number;
-  }[];
+  tasks: Task[];
+};
+
+export type Task = {
+  id: number;
+  description: string;
+  price: number;
 };
