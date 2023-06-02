@@ -168,10 +168,6 @@ function Page() {
                 Login
               </button>
               <div className="flex justify-between mt-4">
-                <span className="text-sm ml-2 hover:text-blue-500 cursor-pointer hover:-translate-y-1 duration-500 transition-all">
-                  Esqueceu sua senha?
-                </span>
-
                 <Link
                   href="#"
                   className="text-sm ml-2 hover:text-blue-500 cursor-pointer hover:-translate-y-1 duration-500 transition-all"

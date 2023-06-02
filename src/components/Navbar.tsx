@@ -25,6 +25,7 @@ export default function Navbar({ type }: { type: 'Client' | 'Barber' }) {
     Client: [
       { name: 'Início', href: '/dashboard' },
       { name: 'Agendar horário', href: '/dashboard/agendar' },
+      { name: 'Meus agendamentos', href: '/dashboard/meus-agendamentos' },
     ],
     Barber: [
       {

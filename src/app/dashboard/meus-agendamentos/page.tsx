@@ -1,12 +1,13 @@
 'use client';
 
-import { Appointment } from '@/interfaces/barber';
-import { TrashIcon } from '@heroicons/react/24/outline';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { User } from '@/interfaces/user';
 import { useCallback, useEffect, useState } from 'react';
 import fetchMe from '../_actions';
+import { useRouter } from 'next/navigation';
 import fetchMyAppointments from './_actions';
+import { Appointment } from '@/interfaces/barber';
+import Image from 'next/image';
+import { TrashIcon } from '@heroicons/react/24/outline';
 
 function BarberTime() {
   const router = useRouter();
@@ -30,11 +31,6 @@ function BarberTime() {
         }
 
         localStorage.setItem('user', JSON.stringify(res.data));
-
-        if (res.data.type === 'Client') {
-          router.push('/dashboard');
-          return;
-        }
       });
     },
     [router],
@@ -54,6 +50,7 @@ function BarberTime() {
 
   return (
     <div className="mx-auto max-w-xl px-4 py-10 sm:px-6 lg:px-8 bg-white rounded-2xl mt-12">
+      <h1 className="font-semibold text-gray-900">Meus agendamentos</h1>
       <ul role="list" className="divide-y divide-gray-100">
         {appointments.map(appointments => (
           <li

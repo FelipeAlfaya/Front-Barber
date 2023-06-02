@@ -4,7 +4,7 @@ export async function fetchRegister(data: FormData) {
   const name = data.get('name');
   const email = data.get('email');
   const password = data.get('password');
-  const password_confirmation = data.get('password_confirmation');
+  const password_confirmation = data.get('password-confirmation');
 
   if (!name || !email || !password || !password_confirmation) {
     return {

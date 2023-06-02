@@ -3,10 +3,9 @@
 import Select from '@/components/Select';
 import { Barber } from '@/interfaces/barber';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState, useTransition } from 'react';
 import fetchAppointment from './_actions';
-import Datepicker from 'react-tailwindcss-datepicker';
-import { useRouter } from 'next/navigation';
 
 export default function Page() {
   const [barbers, setBarbers] = useState<Barber[]>([]);

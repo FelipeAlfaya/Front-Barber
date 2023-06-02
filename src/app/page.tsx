@@ -3,9 +3,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useTransition } from 'react';
 import { fetchLogin } from './_actions';
-import { User } from '@/interfaces/user';
 
 export default function Home() {
   const [isPending, startTransition] = useTransition();
