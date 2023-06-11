@@ -45,7 +45,13 @@ export default function Navbar({ type }: { type: 'Client' | 'Barber' }) {
                 <div className="flex h-16 items-center justify-between">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <Image src="/logo.jpeg" width={48} height={48} alt="" />
+                      <Image
+                        src="/logo.jpeg"
+                        width={48}
+                        height={48}
+                        alt=""
+                        className="rounded-full"
+                      />
                     </div>
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4 text-white">

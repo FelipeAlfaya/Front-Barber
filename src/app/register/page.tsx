@@ -65,11 +65,9 @@ function Page() {
               action={handleSubmit}
               className="bg-white rounded-md shadow-2xl p-5"
             >
-              <h1 className="text-gray-800 font-bold text-2xl mb-1">
-                Olá de novo!
-              </h1>
+              <h1 className="text-gray-800 font-bold text-2xl mb-1">Olá!</h1>
               <p className="text-sm font-normal text-gray-600 mb-8">
-                Bem-vindo de volta!
+                Seja Bem-Vindo!
               </p>
               <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
                 <svg

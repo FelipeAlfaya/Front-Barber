@@ -40,6 +40,44 @@ function BarberTime() {
     [router],
   );
 
+  const deleteAppointment = useCallback(
+    async (appointmentId: number) => {
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        router.push('/');
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `http://localhost:3030/appointment/${appointmentId}`,
+          {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+
+        if (response.status === 200) {
+          alert('Appointment excluído com sucesso.');
+          getMyAppointments(token);
+        } else {
+          const data = await response.json();
+          alert(data.error || 'Erro ao excluir o appointment.');
+        }
+      } catch (error) {
+        console.error('Erro ao excluir   o appointment:', error);
+        alert(
+          'Erro ao excluir o appointment. Verifique a conexão com o servidor.',
+        );
+      }
+    },
+    [router],
+  );
+
   useEffect(() => {
     const token = localStorage.getItem('token');
 
@@ -79,7 +117,10 @@ function BarberTime() {
             </div>
             <div className="hidden sm:flex sm:flex-col sm:items-end">
               <p className="text-sm leading-6 text-gray-900">
-                {appointments.time}
+                {' '}
+                {new Date(appointments.date).toLocaleDateString(
+                  'pt-BR',
+                )} às {appointments.time}
               </p>
               {appointments.created_at ? (
                 <p className="mt-1 text-xs leading-5 text-gray-500">
@@ -102,11 +143,7 @@ function BarberTime() {
             <TrashIcon
               className="w-6 h-6 text-red-400 cursor-pointer"
               onClick={() => {
-                setAppointments((oldAppointments: Appointment[]) =>
-                  oldAppointments.filter(
-                    appointment => appointment.id !== appointments.id,
-                  ),
-                );
+                deleteAppointment(appointments.id);
               }}
             />
           </li>

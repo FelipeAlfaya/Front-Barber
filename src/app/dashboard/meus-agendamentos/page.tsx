@@ -1,13 +1,12 @@
 'use client';
 
-import { User } from '@/interfaces/user';
+import { Appointment } from '@/interfaces/barber';
+import { TrashIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import fetchMe from '../_actions';
-import { useRouter } from 'next/navigation';
 import fetchMyAppointments from './_actions';
-import { Appointment } from '@/interfaces/barber';
-import Image from 'next/image';
-import { TrashIcon } from '@heroicons/react/24/outline';
 
 function BarberTime() {
   const router = useRouter();
@@ -76,7 +75,10 @@ function BarberTime() {
             </div>
             <div className="hidden sm:flex sm:flex-col sm:items-end">
               <p className="text-sm leading-6 text-gray-900">
-                {appointments.time}
+                {' '}
+                {new Date(appointments.date).toLocaleDateString(
+                  'pt-BR',
+                )} às {appointments.time}
               </p>
               {appointments.created_at ? (
                 <p className="mt-1 text-xs leading-5 text-gray-500">

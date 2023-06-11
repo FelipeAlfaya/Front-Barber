@@ -36,6 +36,22 @@ export async function fetchRegister(data: FormData) {
     cache: 'no-cache',
   });
 
+  if (res.status < 200 || res.status >= 300) {
+    return {
+      data: {
+        error: 'Erro ao cadastrar usuário.',
+      },
+    };
+  }
+
+  if (res.status === 200) {
+    return {
+      data: {
+        success: 'Usuário cadastrado com sucesso.',
+      },
+    };
+  }
+
   return {
     data: await res.json(),
   };

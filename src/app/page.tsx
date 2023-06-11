@@ -7,6 +7,8 @@ import { useEffect, useTransition } from 'react';
 import { fetchLogin } from './_actions';
 
 export default function Home() {
+  const now = new Date();
+  console.log(now);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
