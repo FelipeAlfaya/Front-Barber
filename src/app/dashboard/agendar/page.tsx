@@ -86,6 +86,9 @@ export default function Page() {
 
   const handleDateChange = (e: any) => {
     setDate(e.target.value);
+    const formattedDate = new Date(e.target.value);
+    formattedDate.setDate(formattedDate.getDate() + 1);
+    setDate(formattedDate.toISOString().split('T')[0]);
   };
 
   return (

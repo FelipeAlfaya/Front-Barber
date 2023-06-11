@@ -15,7 +15,7 @@ export default async function fetchAppointment(data: {
     },
     body: JSON.stringify({
       barber: data.barber,
-      date: data.date,
+      date: data.date.substring(0, 10),
       time: data.time,
       tasks: data.tasks,
     }),

@@ -47,6 +47,44 @@ function BarberTime() {
     getMyAppointments(token);
   }, [router, getMe, getMyAppointments]);
 
+  const deleteAppointment = useCallback(
+    async (appointmentId: number) => {
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        router.push('/');
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `http://localhost:3030/appointment/${appointmentId}`,
+          {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+
+        if (response.status === 200) {
+          alert('Appointment excluído com sucesso.');
+          getMyAppointments(token);
+        } else {
+          const data = await response.json();
+          alert(data.error || 'Erro ao excluir o appointment.');
+        }
+      } catch (error) {
+        console.error('Erro ao excluir   o appointment:', error);
+        alert(
+          'Erro ao excluir o appointment. Verifique a conexão com o servidor.',
+        );
+      }
+    },
+    [router],
+  );
+
   return (
     <div className="mx-auto max-w-xl px-4 py-10 sm:px-6 lg:px-8 bg-white rounded-2xl mt-12">
       <h1 className="font-semibold text-gray-900">Meus agendamentos</h1>
@@ -106,6 +144,7 @@ function BarberTime() {
                     appointment => appointment.id !== appointments.id,
                   ),
                 );
+                deleteAppointment(appointments.id);
               }}
             />
           </li>

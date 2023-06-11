@@ -143,6 +143,11 @@ function BarberTime() {
             <TrashIcon
               className="w-6 h-6 text-red-400 cursor-pointer"
               onClick={() => {
+                setAppointments((oldAppointments: Appointment[]) =>
+                  oldAppointments.filter(
+                    appointment => appointment.id !== appointments.id,
+                  ),
+                );
                 deleteAppointment(appointments.id);
               }}
             />
