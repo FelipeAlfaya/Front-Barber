@@ -5,7 +5,7 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { User } from '../interfaces/user';
 
 function classNames(...classes: string[]) {
@@ -42,11 +42,7 @@ export default function Navbar({ type }: { type: 'Client' | 'Barber' }) {
     ],
   };
 
-  useEffect(() => {
-    fetchMyProfile();
-  }, []);
-
-  const fetchMyProfile = () => {
+  const fetchMyProfile = useCallback(() => {
     const token = localStorage.getItem('token');
 
     if (!token) {
@@ -68,7 +64,11 @@ export default function Navbar({ type }: { type: 'Client' | 'Barber' }) {
 
         setUser(res);
       });
-  };
+  }, [router]);
+
+  useEffect(() => {
+    fetchMyProfile();
+  }, [fetchMyProfile]);
 
   return (
     <>
@@ -168,7 +168,11 @@ export default function Navbar({ type }: { type: 'Client' | 'Barber' }) {
               <Disclosure.Panel className="md:hidden">
                 <div className="ml-1 flex items-baseline space-x-4 text-white text-sm">
                   {navigation[type].map(item => (
-                    <Disclosure.Button key={item.name} as="a" href={item.href}>
+                    <Disclosure.Button
+                      key={item.name}
+                      as={Link}
+                      href={item.href}
+                    >
                       {item.name}
                     </Disclosure.Button>
                   ))}

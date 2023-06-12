@@ -102,6 +102,10 @@ div.homePageContainer > button:focus {
   outline: none;
 }
 
+texto-ppp {
+  font-size: 0.5rem;
+}
+
 @media (max-width: 615px) {
   div.homePageContainer > p {
     width: auto;
@@ -113,3 +117,4 @@ div.homePageContainer > button:focus {
     margin: 0 20px;
   }
 }
+

@@ -1,28 +1,20 @@
 'use server';
 
-export default async function fetchTasks(data: FormData) {
-  const token = localStorage.getItem('token');
-  const description = data.get('description');
-  const price = data.get('price');
-
-  if (!description || !price) {
-    return {
-      data: {
-        error: 'Descrição e preço são obrigatórios',
-      },
-    };
-  }
-
+export default async function fetchTasks(data: {
+  token: string | null;
+  description: string;
+  price: number;
+}) {
   const res = await fetch('http://localhost:3030/task', {
     method: 'POST',
-    body: JSON.stringify({
-      description,
-      price,
-    }),
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${data.token}`,
     },
+    body: JSON.stringify({
+      description: data.description,
+      price: data.price,
+    }),
     cache: 'no-cache',
   });
 

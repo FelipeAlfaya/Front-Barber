@@ -221,14 +221,6 @@ export default function Page() {
                   className="flex justify-between gap-x-6 py-5"
                 >
                   <div className="flex gap-x-4">
-                    <Image
-                      className="rounded-full"
-                      width={48}
-                      height={48}
-                      src={barber.avatar || '/logo.jpeg'}
-                      alt={barber.name}
-                    />
-
                     <div className="min-w-0 flex items-center">
                       <p className="text-sm font-semibold leading-6 text-gray-900">
                         {barber.name}
