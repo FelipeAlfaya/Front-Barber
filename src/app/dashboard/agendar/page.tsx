@@ -62,7 +62,7 @@ export default function Page() {
       toast.error(errorMessage);
       setErrorMessage('');
     }
-  }, [sucessMessage, errorMessage])
+  }, [sucessMessage, errorMessage]);
 
   if (!isMounted) {
     return null;
@@ -75,7 +75,7 @@ export default function Page() {
       setErrorMessage('Você precisa selecionar um horário');
       return;
     }
-    
+
     if (!date) {
       setErrorMessage('Você precisa selecionar uma data');
       return;
@@ -98,7 +98,7 @@ export default function Page() {
           setSucessMessage('Agendamento realizado com sucesso!');
           setTimeout(() => {
             router.push('/dashboard');
-          }, 5001);
+          }, 2000);
         } else {
           setErrorMessage(res.data.error);
         }
@@ -108,9 +108,6 @@ export default function Page() {
 
   const handleDateChange = (e: any) => {
     setDate(e.target.value);
-    const formattedDate = new Date(e.target.value);
-    formattedDate.setDate(formattedDate.getDate() + 1);
-    setDate(formattedDate.toISOString().split('T')[0]);
   };
 
   return (
@@ -236,7 +233,7 @@ export default function Page() {
                       </p>
                     </div>
                   </div>
-                  <div className="hidden sm:flex sm:flex-col sm:items-end">
+                  <div className="sm:flex sm:flex-col sm:items-end">
                     <button
                       onClick={() => setBarber(barber)}
                       type="button"

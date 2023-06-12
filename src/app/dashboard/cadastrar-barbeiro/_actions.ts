@@ -44,7 +44,7 @@ export async function fetchRegister(data: FormData) {
     };
   }
 
-  if (res.status === 201) {
+  if (res.status === 201 || 200) {
     return {
       data: {
         success: 'Barbeiro cadastrado com sucesso.',

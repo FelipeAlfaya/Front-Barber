@@ -1,11 +1,12 @@
 'use client';
 
 import { Disclosure, Menu, Transition } from '@headlessui/react';
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
+import { User } from '../interfaces/user';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -14,6 +15,7 @@ function classNames(...classes: string[]) {
 export default function Navbar({ type }: { type: 'Client' | 'Barber' }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [user, setUser] = useState<User>();
 
   function handleLogout() {
     localStorage.removeItem('token');
@@ -29,8 +31,39 @@ export default function Navbar({ type }: { type: 'Client' | 'Barber' }) {
     ],
     Barber: [
       { name: 'Agendamentos', href: '/dashboard/barbeiro' },
-      { name: 'Cadastrar novo barbeiro', href: '/dashboard/cadastrar-barbeiro' },
+      {
+        name: 'Cadastrar novo barbeiro',
+        href: '/dashboard/cadastrar-barbeiro',
+      },
     ],
+  };
+
+  useEffect(() => {
+    fetchMyProfile();
+  }, []);
+
+  const fetchMyProfile = () => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      router.push('/');
+      return;
+    }
+
+    fetch(`http://localhost:3030/user/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(res => res.json())
+      .then((res: User) => {
+        if (!res.id) {
+          router.push('/');
+          return;
+        }
+
+        setUser(res);
+      });
   };
 
   return (
@@ -129,7 +162,7 @@ export default function Navbar({ type }: { type: 'Client' | 'Barber' }) {
               </div>
 
               <Disclosure.Panel className="md:hidden">
-                <div className="space-y-1 px-2 pb-3 pt-2 sm:px-3">
+                <div className="ml-10 flex items-baseline space-x-4 text-white text-base">
                   {navigation[type].map(item => (
                     <Disclosure.Button key={item.name} as="a" href={item.href}>
                       {item.name}
@@ -138,22 +171,23 @@ export default function Navbar({ type }: { type: 'Client' | 'Barber' }) {
                 </div>
                 <div className="border-t border-gray-700 pb-3 pt-4">
                   <div className="flex items-center px-5">
-                    <div className="flex-shrink-0">{'imagem vem aqui'}</div>
+                    <div className="flex-shrink-0">
+                      {' '}
+                      <Image
+                        src="/profile-icon-9.png"
+                        width={48}
+                        height={48}
+                        alt=""
+                      />
+                    </div>
                     <div className="ml-3">
                       <div className="text-base font-medium leading-none text-white">
-                        {'user.name'}
+                        {user?.name}
                       </div>
                       <div className="text-sm font-medium leading-none text-gray-400">
-                        {'user.email'}
+                        {user?.email}
                       </div>
                     </div>
-                    <button
-                      type="button"
-                      className="ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                    >
-                      <span className="sr-only">View notifications</span>
-                      <BellIcon className="h-6 w-6" aria-hidden="true" />
-                    </button>
                   </div>
                   <div className="mt-3 space-y-1 px-2">
                     <Disclosure.Button

@@ -15,14 +15,14 @@ function Page() {
 
   const handleSubmit = (credentials: FormData) => {
     startTransition(async () => {
-      const res = await fetchRegister(credentials)
-      .then(res => {
-        if (res.data.token) {
+      const res = await fetchRegister(credentials).then(res => {
+        if (res.data.status === 201 || 200) {
+          alert('Cadastro realizado com sucesso');
           router.push('/');
         } else {
           setErrorMessage(res.data.error);
         }
-      })
+      });
     });
   };
 

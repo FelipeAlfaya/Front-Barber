@@ -44,7 +44,7 @@ export async function fetchRegister(data: FormData) {
     };
   }
 
-  if (res.status === 200) {
+  if (res.status === 201 || 200) {
     return {
       data: {
         success: 'Usuário cadastrado com sucesso.',

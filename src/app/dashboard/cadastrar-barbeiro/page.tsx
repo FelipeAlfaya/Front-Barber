@@ -17,7 +17,7 @@ function Page() {
   const handleSubmit = async (credentials: FormData) => {
     startTransition(() => {
       fetchRegister(credentials)
-        .then((res) => {
+        .then(res => {
           if (res.data.token) {
             router.push('/');
           } else if (res.data.success) {
@@ -29,7 +29,7 @@ function Page() {
             toast.error(res.data.error);
           }
         })
-        .catch((error) => {
+        .catch(error => {
           toast.error('Ocorreu um erro ao realizar o registro');
         });
     });
@@ -47,45 +47,43 @@ function Page() {
       id: 2,
       description: 'navalhado',
       price: 15,
-      selected: false
+      selected: false,
     },
     {
       id: 3,
       description: 'sobrancelha',
       price: 5,
-      selected: false
+      selected: false,
     },
     {
       id: 4,
       description: 'barba',
       price: 5,
-      selected: false
+      selected: false,
     },
     {
       id: 5,
       description: 'completo',
       price: 23,
-      selected: false
+      selected: false,
     },
   ]);
 
   const handleTaskSelection = (taskId: number) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === taskId ? { ...task, selected: !task.selected } : task
-      )
+    setTasks(prevTasks =>
+      prevTasks.map(task =>
+        task.id === taskId ? { ...task, selected: !task.selected } : task,
+      ),
     );
   };
 
   const handleSelectAll = () => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) => ({ ...task, selected: true }))
-    );
+    setTasks(prevTasks => prevTasks.map(task => ({ ...task, selected: true })));
   };
 
   const handleSelectNone = () => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) => ({ ...task, selected: false }))
+    setTasks(prevTasks =>
+      prevTasks.map(task => ({ ...task, selected: false })),
     );
   };
 
@@ -219,7 +217,7 @@ function Page() {
 
               <div className="mb-8">
                 <p className="font-semibold">Tarefas:</p>
-                {tasks.map((task) => (
+                {tasks.map(task => (
                   <div key={task.id} className="flex items-center mb-2">
                     <input
                       type="checkbox"
@@ -228,14 +226,24 @@ function Page() {
                       onChange={() => handleTaskSelection(task.id)}
                       className="mr-2"
                     />
-                    <label htmlFor={`task-${task.id}`}>{task.description}</label>
+                    <label htmlFor={`task-${task.id}`}>
+                      {task.description}
+                    </label>
                   </div>
                 ))}
                 <div>
-                  <button type="button" onClick={handleSelectAll} className="mr-2">
+                  <button
+                    type="button"
+                    onClick={handleSelectAll}
+                    className="mr-2 text-sm ml-2 hover:text-blue-500 cursor-pointer hover:-translate-y-1 duration-500 transition-all"
+                  >
                     Selecionar Todos
                   </button>
-                  <button type="button" onClick={handleSelectNone}>
+                  <button
+                    type="button"
+                    onClick={handleSelectNone}
+                    className="text-sm ml-2 hover:text-blue-500 cursor-pointer hover:-translate-y-1 duration-500 transition-all"
+                  >
                     Selecionar Nenhum
                   </button>
                 </div>
@@ -250,10 +258,10 @@ function Page() {
               </button>
               <div className="flex justify-between mt-4">
                 <Link
-                  href="#"
+                  href="/dashboard/barbeiro"
                   className="text-sm ml-2 hover:text-blue-500 cursor-pointer hover:-translate-y-1 duration-500 transition-all"
                 >
-                  Voltar ao dashboard? <Link href="/barbeiro"></Link>
+                  Voltar ao dashboard?
                 </Link>
               </div>
             </form>
