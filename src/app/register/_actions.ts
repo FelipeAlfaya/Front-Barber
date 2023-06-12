@@ -36,6 +36,8 @@ export async function fetchRegister(data: FormData) {
     cache: 'no-cache',
   });
 
+  console.log(await res.json());
+
   if (res.status < 200 || res.status >= 300) {
     return {
       data: {

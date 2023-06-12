@@ -26,7 +26,12 @@ export default function Page() {
   const router = useRouter();
 
   const getBarbers = useCallback(async () => {
-    await fetch('/api/barbers')
+    await fetch('/api/barbers', {
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
       .then(res => res.json())
       .then(barbers => {
         setBarbers(barbers);
@@ -96,9 +101,6 @@ export default function Page() {
       }).then(res => {
         if (res.data.id) {
           setSucessMessage('Agendamento realizado com sucesso!');
-          setTimeout(() => {
-            router.push('/dashboard');
-          }, 2000);
         } else {
           setErrorMessage(res.data.error);
         }

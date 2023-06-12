@@ -7,19 +7,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import fetchMe from '../_actions';
-import fetchMyAppointments, { fetchDelete } from './_actions';
+import { fetchDelete } from './_actions';
 
 function BarberTime() {
   const router = useRouter();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
-
-  const getMyAppointments = useCallback(async (token: string) => {
-    await fetchMyAppointments(token).then(res => {
-      if (res.data instanceof Array) {
-        setAppointments(res.data.sort((a, b) => a.time.localeCompare(b.time)));
-      }
-    });
-  }, []);
 
   const getMe = useCallback(
     async (token: string) => {
@@ -32,7 +24,7 @@ function BarberTime() {
           return;
         }
 
-        localStorage.setItem('user', JSON.stringify(res.data));
+        setAppointments(res.data.appointments);
       });
     },
     [router],
@@ -47,8 +39,7 @@ function BarberTime() {
     }
 
     getMe(token);
-    getMyAppointments(token);
-  }, [getMe, getMyAppointments, router]);
+  }, [getMe, router]);
 
   const deleteAppointment = async (appointmentId: number) => {
     const token = localStorage.getItem('token');
@@ -87,19 +78,20 @@ function BarberTime() {
               <div className="flex gap-x-4 ">
                 <div className="min-w-0 flex-auto">
                   <p className="text-sm font-semibold leading-6 text-gray-900">
-                    {appointments.client.name}
+                    {appointments.barber.name}
                   </p>
                   <p className="mt-1 truncate text-xs leading-5 text-gray-500">
-                    {appointments.client.email}
+                    {appointments.barber.email}
                   </p>
                 </div>
               </div>
               <div className="sm:flex sm:flex-col sm:items-end">
                 <p className="text-sm leading-6 text-gray-900">
                   {' '}
-                  {new Date(appointments.date).toLocaleDateString(
-                    'pt-BR',
-                  )} às {appointments.time}
+                  {new Date(appointments.date).toLocaleDateString('pt-BR', {
+                    timeZone: 'UTC',
+                  })}{' '}
+                  às {appointments.time}
                 </p>
                 {appointments.created_at ? (
                   <p className="mt-1 text-xs leading-5 text-gray-500">
@@ -107,6 +99,9 @@ function BarberTime() {
                     <span>
                       {new Date(appointments.created_at).toLocaleDateString(
                         'pt-BR',
+                        {
+                          timeZone: 'UTC',
+                        },
                       )}
                     </span>
                   </p>

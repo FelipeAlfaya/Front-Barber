@@ -21,4 +21,5 @@ export type Appointment = {
   created_at: string;
   time: string;
   client: User;
+  barber: User;
 };

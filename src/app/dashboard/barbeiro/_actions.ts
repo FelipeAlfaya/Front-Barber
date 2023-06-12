@@ -3,7 +3,11 @@
 import { Appointment } from '@/interfaces/barber';
 
 export default async function fetchMyAppointments(token: string): Promise<{
-  data: Appointment[];
+  data:
+    | Appointment[]
+    | {
+        error: string;
+      };
 }> {
   const res = await fetch('http://localhost:3030/appointment/me', {
     method: 'GET',

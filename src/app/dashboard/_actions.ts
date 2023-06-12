@@ -7,9 +7,7 @@ export default async function fetchMe(token: string) {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    next: {
-      revalidate: 120,
-    },
+    cache: 'no-cache',
   });
 
   if (res.status < 200 || res.status >= 300) {
