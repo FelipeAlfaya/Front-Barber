@@ -6,6 +6,9 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState, useTransition } from 'react';
 import fetchAppointment from './_actions';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { time } from 'console';
 
 export default function Page() {
   const [barbers, setBarbers] = useState<Barber[]>([]);
@@ -18,6 +21,8 @@ export default function Page() {
   const [tasks, setTasks] = useState<number[]>([]);
   const [isMounted, setIsMounted] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [sucessMessage, setSucessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
 
   const getBarbers = useCallback(async () => {
@@ -49,6 +54,16 @@ export default function Page() {
     }
   }, [barber]);
 
+  useEffect(() => {
+    if (sucessMessage) {
+      toast.success(sucessMessage);
+      setSucessMessage('');
+    } else if (errorMessage) {
+      toast.error(errorMessage);
+      setErrorMessage('');
+    }
+  }, [sucessMessage, errorMessage])
+
   if (!isMounted) {
     return null;
   }
@@ -57,12 +72,17 @@ export default function Page() {
     const token = localStorage.getItem('token');
 
     if (!horario) {
-      alert('Você precisa selecionar um horário');
+      setErrorMessage('Você precisa selecionar um horário');
+      return;
+    }
+    
+    if (!date) {
+      setErrorMessage('Você precisa selecionar uma data');
       return;
     }
 
     if (!tasks.length) {
-      alert('Você precisa selecionar um serviço');
+      setErrorMessage('Você precisa selecionar um serviço');
       return;
     }
 
@@ -75,10 +95,12 @@ export default function Page() {
         date,
       }).then(res => {
         if (res.data.id) {
-          alert('Agendamento realizado com sucesso!');
-          router.push('/dashboard');
+          setSucessMessage('Agendamento realizado com sucesso!');
+          setTimeout(() => {
+            router.push('/dashboard');
+          }, 5001);
         } else {
-          alert(res.data.error);
+          setErrorMessage(res.data.error);
         }
       });
     });
@@ -232,6 +254,7 @@ export default function Page() {
           </ul>
         </div>
       )}
+      <ToastContainer />
     </>
   );
 }

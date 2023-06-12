@@ -5,37 +5,89 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useTransition, useState } from 'react';
 import { fetchRegister } from './_actions';
+
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function Page() {
   const [isPending, startTransition] = useTransition();
-  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const router = useRouter();
 
-  const handleSubmit = (credentials: FormData) => {
-    startTransition(async () => {
-      const res = await fetchRegister(credentials)
-      .then(res => {
-        if (res.data.token) {
-          router.push('/');
-        } else {
-          setErrorMessage(res.data.error);
-        }
-      })
+  const handleSubmit = async (credentials: FormData) => {
+    startTransition(() => {
+      fetchRegister(credentials)
+        .then((res) => {
+          if (res.data.token) {
+            router.push('/');
+          } else if (res.data.success) {
+            setSuccessMessage(res.data.success);
+            setTimeout(() => {
+              router.push('/');
+            }, 5001);
+          } else {
+            toast.error(res.data.error);
+          }
+        })
+        .catch((error) => {
+          toast.error('Ocorreu um erro ao realizar o registro');
+        });
     });
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      router.push('/dashboard');
-    } else if (errorMessage) {
-      toast.error(errorMessage);
-      setErrorMessage('');
+    if (successMessage) {
+      toast.success(successMessage);
+      setSuccessMessage('');
     }
-  }, [router, errorMessage]);
+  }, [successMessage]);
+
+  const [tasks, setTasks] = useState([
+    {
+      id: 2,
+      description: 'navalhado',
+      price: 15,
+      selected: false
+    },
+    {
+      id: 3,
+      description: 'sobrancelha',
+      price: 5,
+      selected: false
+    },
+    {
+      id: 4,
+      description: 'barba',
+      price: 5,
+      selected: false
+    },
+    {
+      id: 5,
+      description: 'completo',
+      price: 23,
+      selected: false
+    },
+  ]);
+
+  const handleTaskSelection = (taskId: number) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === taskId ? { ...task, selected: !task.selected } : task
+      )
+    );
+  };
+
+  const handleSelectAll = () => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => ({ ...task, selected: true }))
+    );
+  };
+
+  const handleSelectNone = () => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => ({ ...task, selected: false }))
+    );
+  };
 
   return (
     <>
@@ -74,7 +126,7 @@ function Page() {
             >
               <h1 className="text-gray-800 font-bold text-2xl mb-1">Olá!</h1>
               <p className="text-sm font-normal text-gray-600 mb-8">
-                Seja Bem-Vindo!
+                Cadastro de barbeiro
               </p>
               <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
                 <svg
@@ -96,7 +148,7 @@ function Page() {
                   className=" pl-2 w-full outline-none border-none"
                   type="text"
                   name="name"
-                  placeholder="Seu nome de usuário"
+                  placeholder="Nome do barbeiro"
                 />
               </div>
               <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
@@ -119,7 +171,7 @@ function Page() {
                   className=" pl-2 w-full outline-none border-none"
                   type="email"
                   name="email"
-                  placeholder="Email Address"
+                  placeholder="Endereço de email"
                 />
               </div>
               <div className="flex items-center border-2 mb-12 py-2 px-3 rounded-2xl ">
@@ -140,7 +192,7 @@ function Page() {
                   type="password"
                   name="password"
                   id="password"
-                  placeholder="Password"
+                  placeholder="Senha"
                 />
               </div>
               <div className="flex items-center border-2 mb-12 py-2 px-3 rounded-2xl ">
@@ -161,8 +213,32 @@ function Page() {
                   type="password"
                   name="password-confirmation"
                   id="password-confirmation"
-                  placeholder="Confirm your password"
+                  placeholder="Confirme sua senha"
                 />
+              </div>
+
+              <div className="mb-8">
+                <p className="font-semibold">Tarefas:</p>
+                {tasks.map((task) => (
+                  <div key={task.id} className="flex items-center mb-2">
+                    <input
+                      type="checkbox"
+                      id={`task-${task.id}`}
+                      checked={task.selected}
+                      onChange={() => handleTaskSelection(task.id)}
+                      className="mr-2"
+                    />
+                    <label htmlFor={`task-${task.id}`}>{task.description}</label>
+                  </div>
+                ))}
+                <div>
+                  <button type="button" onClick={handleSelectAll} className="mr-2">
+                    Selecionar Todos
+                  </button>
+                  <button type="button" onClick={handleSelectNone}>
+                    Selecionar Nenhum
+                  </button>
+                </div>
               </div>
 
               <button
@@ -170,14 +246,14 @@ function Page() {
                 type="submit"
                 className="block w-full bg-indigo-600 mt-5 py-2 rounded-2xl hover:bg-indigo-700 hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-2"
               >
-                Registrar
+                Confirmar cadastro
               </button>
               <div className="flex justify-between mt-4">
                 <Link
                   href="#"
                   className="text-sm ml-2 hover:text-blue-500 cursor-pointer hover:-translate-y-1 duration-500 transition-all"
                 >
-                  Já possui uma conta? <Link href="/">Faça login!</Link>
+                  Voltar ao dashboard? <Link href="/barbeiro"></Link>
                 </Link>
               </div>
             </form>

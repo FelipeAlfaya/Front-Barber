@@ -28,10 +28,8 @@ export default function Navbar({ type }: { type: 'Client' | 'Barber' }) {
       { name: 'Meus agendamentos', href: '/dashboard/meus-agendamentos' },
     ],
     Barber: [
-      {
-        name: 'Agendamentos',
-        href: '/dashboard/barbeiro',
-      },
+      { name: 'Agendamentos', href: '/dashboard/barbeiro' },
+      { name: 'Cadastrar novo barbeiro', href: '/dashboard/cadastrar-barbeiro' },
     ],
   };
 

@@ -7,10 +7,14 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import fetchMe from '../_actions';
 import fetchMyAppointments from './_actions';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function BarberTime() {
   const router = useRouter();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [sucessMessage, setSucessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const getMyAppointments = useCallback(async (token: string) => {
     await fetchMyAppointments(token).then(res => {
@@ -24,7 +28,7 @@ function BarberTime() {
     async (token: string) => {
       await fetchMe(token).then(res => {
         if (!res.data.id) {
-          alert(res.data.error || 'Sessão expirada, faça login novamente.');
+          setErrorMessage(res.data.error || 'Sessão expirada, faça login novamente.');
           router.push('/');
           return;
         }
@@ -41,11 +45,17 @@ function BarberTime() {
     if (!token) {
       router.push('/');
       return;
+    } else if (sucessMessage) {
+      toast.success(sucessMessage);
+      setSucessMessage('');
+    } else if (errorMessage) {
+      toast.error(errorMessage);
+      setErrorMessage('');
     }
 
     getMe(token);
     getMyAppointments(token);
-  }, [router, getMe, getMyAppointments]);
+  }, [router, getMe, getMyAppointments, sucessMessage, errorMessage]);
 
   const deleteAppointment = useCallback(
     async (appointmentId: number) => {
@@ -66,18 +76,18 @@ function BarberTime() {
               Authorization: `Bearer ${token}`,
             },
           },
-        );
-
-        if (response.status === 200) {
-          alert('Appointment excluído com sucesso.');
-          getMyAppointments(token);
-        } else {
-          const data = await response.json();
-          alert(data.error || 'Erro ao excluir o appointment.');
-        }
+        ).then( async response => {
+          if (response.status === 200) {
+            setSucessMessage('Appointment excluído com sucesso.');
+            getMyAppointments(token);
+          } else {
+            const data = await response.json();
+            setErrorMessage(data.error + '\nErro ao excluir o appointment.');
+          }
+        })
       } catch (error) {
         console.error('Erro ao excluir   o appointment:', error);
-        alert(
+        setErrorMessage(
           'Erro ao excluir o appointment. Verifique a conexão com o servidor.',
         );
       }
@@ -88,8 +98,11 @@ function BarberTime() {
   return (
     <div className="mx-auto max-w-xl px-4 py-10 sm:px-6 lg:px-8 bg-white rounded-2xl mt-12">
       <h1 className="font-semibold text-gray-900">Meus agendamentos</h1>
+    {appointments.length === 0 ? (  
+      <p className="text-center text-gray-500">Sem agendamentos</p>
+    ) : (
       <ul role="list" className="divide-y divide-gray-100">
-        {appointments.map(appointments => (
+         {appointments.map(appointments => (
           <li
             key={appointments.id}
             className="flex justify-between gap-x-6 py-5"
@@ -150,8 +163,11 @@ function BarberTime() {
           </li>
         ))}
       </ul>
+    )}
+    <ToastContainer />
     </div>
   );
+
 }
 
 export default BarberTime;

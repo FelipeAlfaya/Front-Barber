@@ -3,25 +3,34 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useTransition } from 'react';
+import { useEffect, useTransition, useState } from 'react';
 import { fetchLogin } from './_actions';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Home() {
   const now = new Date();
   console.log(now);
   const [isPending, startTransition] = useTransition();
+  const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
 
   const handleSubmit = (credentials: FormData) => {
     startTransition(async () => {
-      const res = await fetchLogin(credentials);
+      const res = await fetchLogin(credentials)
+      .then(res => {
+        if (res.data.token) {
+          localStorage.setItem('token', res.data.token);
+          router.push('/dashboard');
+        } else {
+          setErrorMessage('Email ou senha incorretos');
+        }
+      })
+      .catch((error) => {
+        toast.error('Ocorreu um erro ao realizar o registro');
+      });
 
-      if (res.data.token) {
-        localStorage.setItem('token', res.data.token);
-        router.push('/dashboard');
-      } else {
-        alert('Email ou senha incorretos');
-      }
+      
     });
   };
 
@@ -30,10 +39,14 @@ export default function Home() {
 
     if (token) {
       router.push('/dashboard');
-    } else {
-      router.push('/');
+    } else if (errorMessage) {
+      toast.error(errorMessage);
+      setErrorMessage('');
+      setTimeout(() => {
+        router.push('/');
+      }, 5001);
     }
-  }, [router]);
+  }, [router, errorMessage]);
 
   return (
     <>
@@ -139,6 +152,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </>
   );
 }
