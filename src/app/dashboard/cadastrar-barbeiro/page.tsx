@@ -116,7 +116,7 @@ function Page() {
             </p>
           </div>
         </div>
-        <div className="flex w-full lg:w-1/2 justify-center items-center bg-white space-y-8">
+        <div className="flex flex-col h-screen w-full lg:w-1/2 justify-center items-center bg-white space-y-8">
           <div className="w-full px-8 md:px-32 lg:px-24">
             <form
               action={handleSubmit}
@@ -214,41 +214,6 @@ function Page() {
                   placeholder="Confirme sua senha"
                 />
               </div>
-
-              <div className="mb-8">
-                <p className="font-semibold">Tarefas:</p>
-                {tasks.map(task => (
-                  <div key={task.id} className="flex items-center mb-2">
-                    <input
-                      type="checkbox"
-                      id={`task-${task.id}`}
-                      checked={task.selected}
-                      onChange={() => handleTaskSelection(task.id)}
-                      className="mr-2"
-                    />
-                    <label htmlFor={`task-${task.id}`}>
-                      {task.description}
-                    </label>
-                  </div>
-                ))}
-                <div>
-                  <button
-                    type="button"
-                    onClick={handleSelectAll}
-                    className="mr-2 text-sm ml-2 hover:text-blue-500 cursor-pointer hover:-translate-y-1 duration-500 transition-all"
-                  >
-                    Selecionar Todos
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleSelectNone}
-                    className="text-sm ml-2 hover:text-blue-500 cursor-pointer hover:-translate-y-1 duration-500 transition-all"
-                  >
-                    Selecionar Nenhum
-                  </button>
-                </div>
-              </div>
-
               <button
                 disabled={isPending}
                 type="submit"

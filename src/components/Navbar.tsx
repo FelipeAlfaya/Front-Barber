@@ -35,6 +35,10 @@ export default function Navbar({ type }: { type: 'Client' | 'Barber' }) {
         name: 'Cadastrar novo barbeiro',
         href: '/dashboard/cadastrar-barbeiro',
       },
+      {
+        name: 'Meus serviços',
+        href: '/dashboard/barber-tasks',
+      },
     ],
   };
 
@@ -162,7 +166,7 @@ export default function Navbar({ type }: { type: 'Client' | 'Barber' }) {
               </div>
 
               <Disclosure.Panel className="md:hidden">
-                <div className="ml-10 flex items-baseline space-x-4 text-white text-base">
+                <div className="ml-1 flex items-baseline space-x-4 text-white text-sm">
                   {navigation[type].map(item => (
                     <Disclosure.Button key={item.name} as="a" href={item.href}>
                       {item.name}
