@@ -3,7 +3,11 @@
 import { Appointment } from '@/interfaces/barber';
 
 export default async function fetchMyAppointments(token: string): Promise<{
-  data: Appointment[];
+  data:
+    | Appointment[]
+    | {
+        error: string;
+      };
 }> {
   const res = await fetch('http://localhost:3030/appointment/me', {
     method: 'GET',
@@ -11,9 +15,7 @@ export default async function fetchMyAppointments(token: string): Promise<{
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    next: {
-      revalidate: 60,
-    },
+    cache: 'no-cache',
   });
 
   if (res.status < 200 || res.status >= 300) {
@@ -29,16 +31,14 @@ export default async function fetchMyAppointments(token: string): Promise<{
   };
 }
 
-export async function fetchDelete(token: string) {
-  const res = await fetch('http://localhost:3030/appointment/me', {
+export async function fetchDelete(token: string, id: number) {
+  const res = await fetch(`http://localhost:3030/appointment/${id}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    next: {
-      revalidate: 60,
-    },
+    cache: 'no-cache',
   });
 
   if (res.status < 200 || res.status >= 300) {
