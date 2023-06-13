@@ -78,7 +78,7 @@ function Tasks() {
   }, [router, getMe]);
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100">
+    <div className="flex flex-col h-screen bg-[#172740]">
       <div className="grid place-items-center mx-2 my-20 sm:my-auto">
         <div className="flex"></div>
 

@@ -101,6 +101,7 @@ export default function Page() {
       }).then(res => {
         if (res.data.id) {
           setSucessMessage('Agendamento realizado com sucesso!');
+          router.push('/dashboard/meus-agendamentos');
         } else {
           setErrorMessage(res.data.error);
         }

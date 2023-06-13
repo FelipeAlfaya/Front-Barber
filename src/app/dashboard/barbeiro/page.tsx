@@ -46,43 +46,40 @@ function BarberTime() {
     [router],
   );
 
-  const deleteAppointment = useCallback(
-    async (appointmentId: number) => {
-      const token = localStorage.getItem('token');
+  const deleteAppointment = useCallback(async (appointmentId: number) => {
+    const token = localStorage.getItem('token');
 
-      if (!token) {
-        router.push('/');
-        return;
-      }
+    if (!token) {
+      router.push('/');
+      return;
+    }
 
-      try {
-        const response = await fetch(
-          `http://localhost:3030/appointment/${appointmentId}`,
-          {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
+    try {
+      const response = await fetch(
+        `http://localhost:3030/appointment/${appointmentId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
-        ).then(async response => {
-          if (response.status === 200) {
-            setSucessMessage('Appointment excluído com sucesso.');
-            getMyAppointments(token);
-          } else {
-            const data = await response.json();
-            setErrorMessage(data.error + '\nErro ao excluir o appointment.');
-          }
-        });
-      } catch (error) {
-        console.error('Erro ao excluir   o appointment:', error);
-        setErrorMessage(
-          'Erro ao excluir o appointment. Verifique a conexão com o servidor.',
-        );
-      }
-    },
-    [router],
-  );
+        },
+      ).then(async response => {
+        if (response.status === 200) {
+          setSucessMessage('Appointment excluído com sucesso.');
+          getMyAppointments(token);
+        } else {
+          const data = await response.json();
+          setErrorMessage(data.error + '\nErro ao excluir o appointment.');
+        }
+      });
+    } catch (error) {
+      console.error('Erro ao excluir   o appointment:', error);
+      setErrorMessage(
+        'Erro ao excluir o appointment. Verifique a conexão com o servidor.',
+      );
+    }
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem('token');

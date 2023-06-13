@@ -22,4 +22,5 @@ export type Appointment = {
   time: string;
   client: User;
   barber: User;
+  tasks: Task[];
 };
